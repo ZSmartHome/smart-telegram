@@ -4,7 +4,8 @@
   "description": "Telegram Bot for smart house control",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node index.ts"
   },
   "repository": {
     "type": "git",
@@ -18,9 +19,14 @@
   },
   "homepage": "https://github.com/zeckson/smart-telegram#readme",
   "devDependencies": {
+    "@types/dotenv": "4.0.1",
     "@types/node": "8.0.51",
     "@types/node-telegram-bot-api": "0.28.2",
-    "node-telegram-bot-api": "0.29.0",
+    "ts-node": "3.3.0",
     "typescript": "2.6.1"
+  },
+  "dependencies": {
+    "dotenv": "4.0.0",
+    "node-telegram-bot-api": "0.29.0"
   }
 }
