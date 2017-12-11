@@ -6,7 +6,14 @@ config();
 const token = process.env.TELEGRAM_BOT_TOKEN as string;
 
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, { polling: true });
+
+const CONFIG = {
+  polling: true,
+  params: {
+    timeout: 300
+  }
+};
+const bot = new TelegramBot(token, CONFIG);
 
 // Matches "/echo [whatever]"
 bot.onText(/\/echo (.+)/, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
