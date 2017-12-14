@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node index.ts"
+
+    "build": "tsc -p . -outDir build",
+
+    "start:dev": "ts-node index.ts",
+    "start": "npm run build && node build/index.js"
   },
   "repository": {
     "type": "git",

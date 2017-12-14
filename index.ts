@@ -1,5 +1,5 @@
-import { config } from 'dotenv';
 import * as TelegramBot from 'node-telegram-bot-api';
+import {config} from 'dotenv';
 
 config();
 // replace the value below with the Telegram token you receive from @BotFather
@@ -8,9 +8,10 @@ const token = process.env.TELEGRAM_BOT_TOKEN as string;
 // Create a bot that uses 'polling' to fetch new updates
 
 const CONFIG = {
-  polling: true,
-  params: {
-    timeout: 300
+  polling: {
+    params: {
+      timeout: 500
+    }
   }
 };
 const bot = new TelegramBot(token, CONFIG);
