@@ -30,9 +30,11 @@ bot.onText(/\/echo (.+)/, (msg: TelegramBot.Message, match: RegExpExecArray | nu
 });
 
 // Matches "/tv [on|off]"
-bot.onText(/\/tv (on|off)?/, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
+bot.onText(/\/tv.?(on|off)?/, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
   const chatId = msg.chat.id;
-  if (!match) {
+  console.log(match);
+  const command = match && match[1];
+  if (!command) {
     bot.sendMessage(chatId, `What should I do with TV?`, {
       reply_markup: {
         keyboard: [
@@ -46,7 +48,6 @@ bot.onText(/\/tv (on|off)?/, (msg: TelegramBot.Message, match: RegExpExecArray |
       }
     });
   } else {
-    const command = match[1];
     bot.sendMessage(chatId, `I will: ${command}`);
   }
 });
