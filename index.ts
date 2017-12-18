@@ -30,7 +30,7 @@ bot.onText(/\/echo (.+)/, (msg: TelegramBot.Message, match: RegExpExecArray | nu
 });
 
 // Matches "/tv [on|off]"
-bot.onText(/\/tv (on|off)/, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
+bot.onText(/\/tv (on|off)?/, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
   const chatId = msg.chat.id;
   if (!match) {
     bot.sendMessage(chatId, `What should I do with TV?`, {
