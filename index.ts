@@ -29,11 +29,33 @@ bot.onText(/\/echo (.+)/, (msg: TelegramBot.Message, match: RegExpExecArray | nu
   bot.sendMessage(chatId, resp);
 });
 
+// Matches "/tv [on|off]"
+bot.onText(/\/tv (on|off)/, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
+  const chatId = msg.chat.id;
+  if (!match) {
+    bot.sendMessage(chatId, `What should I do with TV?`, {
+      reply_markup: {
+        keyboard: [
+          [
+            {"text": "/tv on"},
+            {"text": "/tv off"}
+          ]
+        ],
+        one_time_keyboard: true,
+        resize_keyboard: true
+      }
+    });
+  } else {
+    const command = match[1];
+    bot.sendMessage(chatId, `I will: ${command}`);
+  }
+});
+
 // Listen for any kind of message. There are different kinds of
 // messages.
 bot.on('message', (msg: TelegramBot.Message) => {
   const chatId = msg.chat.id;
 
   // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, 'Received your message');
+  bot.sendMessage(chatId, `Received your message: ${msg.text}`);
 });
