@@ -19,7 +19,7 @@ module.exports = {
   deploy: {
     dev: {
       user: 'pi',
-      host: '192.168.2.7',
+      host: '192.168.2.2',
       ref: 'origin/master',
       repo: 'https://github.com/zeckson/smart-telegram.git',
       path: '/home/pi/smartbot',
