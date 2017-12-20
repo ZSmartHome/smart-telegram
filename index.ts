@@ -29,8 +29,20 @@ bot.onText(/\/echo (.+)/, (msg: TelegramBot.Message, match: RegExpExecArray | nu
   bot.sendMessage(chatId, resp);
 });
 
+const TvCommand = {
+  ON: {
+    name: `on`,
+    shell: `on 0`
+  },
+  OFF: {
+    name: `off`,
+    shell: `standby 0`
+  }
+};
+
+const {exec} = require('child_process');
 // Matches "/tv [on|off]"
-bot.onText(/\/tv.?(on|off)?/, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
+bot.onText(/\/tv.?(on|off)?/i, (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
   const chatId = msg.chat.id;
   console.log(match);
   const command = match && match[1];
@@ -39,8 +51,8 @@ bot.onText(/\/tv.?(on|off)?/, (msg: TelegramBot.Message, match: RegExpExecArray 
       reply_markup: {
         keyboard: [
           [
-            {"text": "/tv on"},
-            {"text": "/tv off"}
+            {text: `/tv ${TvCommand.ON.name}`},
+            {text: `/tv ${TvCommand.OFF.name}`}
           ]
         ],
         one_time_keyboard: true,
@@ -48,7 +60,35 @@ bot.onText(/\/tv.?(on|off)?/, (msg: TelegramBot.Message, match: RegExpExecArray 
       }
     });
   } else {
-    bot.sendMessage(chatId, `I will: ${command}`);
+
+    let shellCommand;
+    switch (command) {
+      case TvCommand.ON.name:
+        shellCommand = TvCommand.ON.shell;
+        break;
+      case TvCommand.OFF.name:
+        shellCommand = TvCommand.OFF.shell;
+        break;
+      default:
+        const message = `Unsupported command: ${command}`;
+        console.error(message);
+        bot.sendMessage(chatId, message);
+    }
+    /*
+      # Switch on
+        echo "on 0" | cec-client -s
+      # Switch off
+        echo "standby 0" | cec-client -s
+    */
+    exec(`echo "${shellCommand}" | cec-client -s`, (error: Error, stdout: string, stderr: string) => {
+      if (error) {
+        bot.sendMessage(chatId, `exec error: ${error}`);
+        return;
+      }
+      bot.sendMessage(chatId, `stdout: ${stdout}`);
+      bot.sendMessage(chatId, `stderr: ${stderr}`);
+    });
+
   }
 });
 
