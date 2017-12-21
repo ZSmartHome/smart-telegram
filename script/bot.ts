@@ -23,5 +23,5 @@ export const init = (token: string, rootId: number) => {
   me(bot, manage);
   debug(bot);
 
-  bot.sendMessage(rootId, `I'm started successfully at ${(new Date()).toLocaleDateString()}`);
+  bot.sendMessage(rootId, `I'm started successfully at ${(new Date()).toLocaleString()}`);
 };
