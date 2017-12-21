@@ -1,21 +1,29 @@
-import {exec} from "child_process";
 import * as TelegramBot from "node-telegram-bot-api";
 import {Manage} from "./manage";
+import {shell} from "./util";
 
-const TvCommand = {
-  ON: {
-    name: `on`,
-    shell: `on 0`
-  },
-  OFF: {
-    name: `off`,
-    shell: `standby 0`
-  }
+/*
+        # Switch on
+          echo "on 0" | cec-client -s
+        # Switch off
+          echo "standby 0" | cec-client -s
+      */
+const TvCommand: { [command: string]: Array<string> } = {
+  'ON': [`on 0`],
+  'OFF': [`standby 0`],
+
+  'CHROMECAST': [`as`, `p 0 1`],
+  'RASPBERRY': [`as`, `p 0 2`],
+  'XBOX': [`as`, `p 0 3`],
 };
+
+const keys = Object.keys(TvCommand).map((it) => it.toLowerCase());
+const variants = keys.join(`|`);
+const buttons = keys.map((it) => ({text: `/tv ${it}`}));
 
 export const setup = (bot: TelegramBot, manage: Manage) => {
 
-// Matches "/tv [on|off]"
+  // Matches "/tv [on|off]"
   const tvAction = (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
     const chatId = msg.chat.id;
     console.log(match);
@@ -25,8 +33,10 @@ export const setup = (bot: TelegramBot, manage: Manage) => {
         reply_markup: {
           keyboard: [
             [
-              {text: `/tv ${TvCommand.ON.name}`},
-              {text: `/tv ${TvCommand.OFF.name}`}
+              buttons[0], buttons[1]
+            ],
+            [
+              buttons[2], buttons[3], buttons[4]
             ]
           ],
           one_time_keyboard: true,
@@ -35,37 +45,25 @@ export const setup = (bot: TelegramBot, manage: Manage) => {
       });
     } else {
       let shellCommand;
-      switch (command) {
-        case TvCommand.ON.name:
-          shellCommand = TvCommand.ON.shell;
-          break;
-        case TvCommand.OFF.name:
-          shellCommand = TvCommand.OFF.shell;
-          break;
-        default:
-          const message = `Unsupported command: ${command}`;
-          console.error(message);
-          bot.sendMessage(chatId, message);
+      const actions = TvCommand[command.toUpperCase()];
+      if (!actions) {
+        const message = `Unsupported command: ${command}`;
+        console.error(message);
+        bot.sendMessage(chatId, message);
+        return;
       }
-      /*
-        # Switch on
-          echo "on 0" | cec-client -s
-        # Switch off
-          echo "standby 0" | cec-client -s
-      */
-      exec(`echo "${shellCommand}" | cec-client -s`,
-        (error: Error | null, stdout: string, stderr: string) => {
-          if (error) {
-            bot.sendMessage(chatId, `exec error: ${error}`);
-            return;
-          }
-          bot.sendMessage(chatId, `stdout: ${stdout}`);
-          bot.sendMessage(chatId, `stderr: ${stderr}`);
-        });
 
+      let current = Promise.resolve(`ok`);
+      for (const action of actions) {
+        current = current.then(() => shell(`echo "${action}" | cec-client -s -d 1`));
+      }
+      current
+        .catch((errorMessage) => errorMessage)
+        .then((message) => bot.sendMessage(chatId, message, {disable_notification: true}));
     }
   };
 
-  bot.onText(/\/tv.?(on|off)?/i, manage.auth(tvAction));
+
+  bot.onText(new RegExp(`\/tv.?(${variants})?`, `i`), manage.auth(tvAction));
 
 };
