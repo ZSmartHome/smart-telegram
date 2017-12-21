@@ -1,5 +1,6 @@
 import {exec} from "child_process";
 import * as TelegramBot from "node-telegram-bot-api";
+import {Manage} from "./manage";
 
 const TvCommand = {
   ON: {
@@ -12,7 +13,7 @@ const TvCommand = {
   }
 };
 
-export const setup = (bot: TelegramBot) => {
+export const setup = (bot: TelegramBot, manage: Manage) => {
 
 // Matches "/tv [on|off]"
   const tvAction = (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
@@ -52,18 +53,19 @@ export const setup = (bot: TelegramBot) => {
         # Switch off
           echo "standby 0" | cec-client -s
       */
-      exec(`echo "${shellCommand}" | cec-client -s`, (error: Error | null, stdout: string, stderr: string) => {
-        if (error) {
-          bot.sendMessage(chatId, `exec error: ${error}`);
-          return;
-        }
-        bot.sendMessage(chatId, `stdout: ${stdout}`);
-        bot.sendMessage(chatId, `stderr: ${stderr}`);
-      });
+      exec(`echo "${shellCommand}" | cec-client -s`,
+        (error: Error | null, stdout: string, stderr: string) => {
+          if (error) {
+            bot.sendMessage(chatId, `exec error: ${error}`);
+            return;
+          }
+          bot.sendMessage(chatId, `stdout: ${stdout}`);
+          bot.sendMessage(chatId, `stderr: ${stderr}`);
+        });
 
     }
   };
 
-  bot.onText(/\/tv.?(on|off)?/i, tvAction);
+  bot.onText(/\/tv.?(on|off)?/i, manage.auth(tvAction));
 
 };
