@@ -55,7 +55,7 @@ export const setup = (bot: TelegramBot, manage: Manage) => {
 
       let current = Promise.resolve(`ok`);
       for (const action of actions) {
-        current = current.then(() => shell(`echo "${action}" | cec-client -s -d 1`));
+        current = current.then(() => shell(`echo "${action}" | cec-client -s`));
       }
       current
         .catch((errorMessage) => errorMessage)
