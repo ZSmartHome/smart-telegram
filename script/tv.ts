@@ -3,18 +3,20 @@ import {Manage} from "./manage";
 import {shell} from "./util";
 
 /*
-        # Switch on
-          echo "on 0" | cec-client -s
-        # Switch off
-          echo "standby 0" | cec-client -s
-      */
-const TvCommand: { [command: string]: Array<string> } = {
-  'ON': [`on 0`],
-  'OFF': [`standby 0`],
+# Switch on
+  echo "on 0" | cec-client -s
+# Switch off
+  echo "standby 0" | cec-client -s
+# Switch HDMI port to 1
+  echo "tx 4F:82:10:00" | cec-client -s
+*/
+const TvCommand: { [command: string]: string } = {
+  'ON': `on 0`,
+  'OFF': `standby 0`,
 
-  'CHROMECAST': [`as`, `p 0 1`],
-  'RASPBERRY': [`as`, `p 0 2`],
-  'XBOX': [`as`, `p 0 3`],
+  'CHROMECAST': `tx 4F:82:10:00`,
+  'RASPBERRY': `tx 4F:82:20:00`,
+  'XBOX': `tx 4F:82:30:00`,
 };
 
 const keys = Object.keys(TvCommand).map((it) => it.toLowerCase());
@@ -44,20 +46,15 @@ export const setup = (bot: TelegramBot, manage: Manage) => {
         }
       });
     } else {
-      let shellCommand;
-      const actions = TvCommand[command.toUpperCase()];
-      if (!actions) {
+      const action = TvCommand[command.toUpperCase()];
+      if (!action) {
         const message = `Unsupported command: ${command}`;
         console.error(message);
         bot.sendMessage(chatId, message);
         return;
       }
 
-      let current = Promise.resolve(`ok`);
-      for (const action of actions) {
-        current = current.then(() => shell(`echo "${action}" | cec-client -s -d 1`));
-      }
-      current
+      shell(`echo "${action}" | cec-client -s -d 1`)
         .catch((errorMessage) => errorMessage)
         .then((message) => bot.sendMessage(chatId, message, {disable_notification: true}));
     }
