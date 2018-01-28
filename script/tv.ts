@@ -1,6 +1,6 @@
 import * as TelegramBot from "node-telegram-bot-api";
-import {Manage} from "./manage";
 import {shell} from "./util";
+import {Command} from "./command";
 
 /*
 # Switch on
@@ -11,27 +11,30 @@ import {shell} from "./util";
   echo "tx 4F:82:10:00" | cec-client -s
 */
 const TvCommand: { [command: string]: string } = {
-  'ON': `on 0`,
-  'OFF': `standby 0`,
+  'on': `on 0`,
+  'off': `standby 0`,
 
-  'CHROMECAST': `tx 4F:82:10:00`,
-  'RASPBERRY': `tx 4F:82:20:00`,
-  'XBOX': `tx 4F:82:30:00`,
+  'chromecast': `tx 4F:82:10:00`,
+  'raspberry': `tx 4F:82:20:00`,
+  'xbox': `tx 4F:82:30:00`,
 };
 
 const keys = Object.keys(TvCommand).map((it) => it.toLowerCase());
 const variants = keys.join(`|`);
 const buttons = keys.map((it) => ({text: `/tv ${it}`}));
 
-export const setup = (bot: TelegramBot, manage: Manage) => {
+export default class TVCommand extends Command {
+  readonly name = `tv`;
+  readonly description = `Controls TV-set`;
+  readonly pattern = `\/${this.name}.?(${variants})?`;
 
-  // Matches "/tv [on|off]"
-  const tvAction = (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
+
+  handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;
     console.log(match);
-    const command = match && match[1];
+    const command = match[1];
     if (!command) {
-      bot.sendMessage(chatId, `What should I do with TV?`, {
+      this.bot.sendMessage(chatId, `What should I do with TV?`, {
         reply_markup: {
           keyboard: [
             [
@@ -46,21 +49,17 @@ export const setup = (bot: TelegramBot, manage: Manage) => {
         }
       });
     } else {
-      const action = TvCommand[command.toUpperCase()];
+      const action = TvCommand[command];
       if (!action) {
         const message = `Unsupported command: ${command}`;
         console.error(message);
-        bot.sendMessage(chatId, message);
+        this.bot.sendMessage(chatId, message);
         return;
       }
 
       shell(`echo "${action}" | cec-client -s -d 1`)
         .catch((errorMessage) => errorMessage)
-        .then((message) => bot.sendMessage(chatId, message, {disable_notification: true}));
+        .then((message) => this.bot.sendMessage(chatId, message, {disable_notification: true}));
     }
-  };
-
-
-  bot.onText(new RegExp(`\/tv.?(${variants})?`, `i`), manage.auth(tvAction));
-
-};
+  }
+}

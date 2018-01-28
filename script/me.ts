@@ -1,9 +1,13 @@
 import * as TelegramBot from "node-telegram-bot-api";
-import {Manage} from "./manage";
+import {Command} from "./command";
 
-export const setup = (bot: TelegramBot, manage: Manage) => {
-  // Matches "/me"
-  bot.onText(/\/me/, (msg: TelegramBot.Message) => {
+export default class MeCommand extends Command {
+  name = `me`;
+  description = `Prints out current user info`;
+  pattern = `\/me`;
+  authRequired = false;
+
+  handle(msg: TelegramBot.Message): void {
     const me = msg.from;
     let message;
     if (!me) {
@@ -11,8 +15,9 @@ export const setup = (bot: TelegramBot, manage: Manage) => {
     } else {
       message = `Here what I know about you:
 @${me.username} ${me.first_name} ${me.last_name} \
-(${manage.isAuthorized(me) ? `` : `not `}authorized)`;
+(${this.manage.isAuthorized(me) ? `` : `not `}authorized)`;
     }
-    bot.sendMessage(msg.chat.id, message, {parse_mode: `Markdown`});
-  });
-};
+    this.bot.sendMessage(msg.chat.id, message, {parse_mode: `Markdown`});
+  }
+
+}
