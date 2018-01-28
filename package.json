@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-
     "build": "tsc -p . -outDir build",
-
     "start:dev": "ts-node index.ts",
-    "start": "npm run build && node build/index.js"
+    "start": "npm run build && node build/index.js",
+    "deploy": "pm2 deploy dev update"
   },
   "repository": {
     "type": "git",
@@ -26,6 +25,7 @@
     "@types/dotenv": "4.0.1",
     "@types/node": "8.0.51",
     "@types/node-telegram-bot-api": "0.28.2",
+    "pm2": "2.9.3",
     "ts-node": "3.3.0",
     "typescript": "2.6.1"
   },
