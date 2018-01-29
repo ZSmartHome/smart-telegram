@@ -48,18 +48,18 @@ export default class TVCommand extends Command {
           resize_keyboard: true
         }
       });
-    } else {
-      const action = TvCommand[command];
-      if (!action) {
-        const message = `Unsupported command: ${command}`;
-        console.error(message);
-        this.bot.sendMessage(chatId, message);
-        return;
-      }
-
-      shell(`echo "${action}" | cec-client -s -d 1`)
-        .catch((errorMessage) => errorMessage)
-        .then((message) => this.bot.sendMessage(chatId, message, {disable_notification: true}));
+      return;
     }
+    const action = TvCommand[command];
+    if (!action) {
+      const message = `Unsupported command: ${command}`;
+      console.error(message);
+      this.bot.sendMessage(chatId, message);
+      return;
+    }
+
+    shell(`echo "${action}" | cec-client -s -d 1`)
+      .catch((errorMessage) => errorMessage)
+      .then((message) => this.bot.sendMessage(chatId, message, {disable_notification: true}));
   }
 }
