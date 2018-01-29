@@ -29,8 +29,9 @@ export const init = (token: string, rootId: number) => {
   const setup = (ctor: CommandConstructor): Command => {
     const command = new ctor(bot, manage);
     const regExp = new RegExp(command.pattern, `i`);
-    const handle = (command.authRequired ? manage.auth(command.handle) : command.handle).bind(command);
-    bot.onText(regExp, (msg, match) => handle(msg, match || EMPTY_REGEXP));
+    const handle = command.handle.bind(command);
+    const commandHandle = command.authRequired ? manage.auth(handle) : handle;
+    bot.onText(regExp, (msg, match) => commandHandle(msg, match || EMPTY_REGEXP));
     return command;
   };
 
