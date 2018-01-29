@@ -1,5 +1,5 @@
 import * as TelegramBot from "node-telegram-bot-api";
-import {Command} from "./command";
+import {Command} from "../command";
 
 export default class MeCommand extends Command {
   name = `me`;

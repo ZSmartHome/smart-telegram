@@ -1,6 +1,6 @@
 import * as TelegramBot from "node-telegram-bot-api";
-import {shell} from "./util";
-import {Command} from "./command";
+import {shell} from "../util";
+import {Command} from "../command";
 
 /*
 # Switch on

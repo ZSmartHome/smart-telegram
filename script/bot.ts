@@ -1,8 +1,8 @@
 import * as TelegramBot from "node-telegram-bot-api";
-import Echo from "./echo";
-import TV from "./tv";
-import Me from "./me";
-import Debug from "./debuglog";
+import Echo from "./command/echo";
+import TV from "./command/tv";
+import Me from "./command/me";
+import Debug from "./command/debuglog";
 import {init as manageInit, Manage} from "./manage";
 import {Command} from "./command";
 
