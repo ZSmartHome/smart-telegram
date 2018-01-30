@@ -1,6 +1,7 @@
 import * as TelegramBot from "node-telegram-bot-api";
 import Echo from "./command/echo";
 import TV from "./command/tv";
+import Light from "./command/light";
 import Me from "./command/me";
 import Debug from "./command/debuglog";
 import {init as manageInit, Manage} from "./manage";
@@ -38,6 +39,7 @@ export const init = (token: string, rootId: number) => {
   const commands = [
     setup(Echo),
     setup(TV),
+    setup(Light),
     setup(Me),
     setup(Debug)
   ];
