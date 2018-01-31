@@ -1,8 +1,8 @@
 import * as TelegramBot from "node-telegram-bot-api";
 import {Command} from "../command";
-import Yeelight = require("yeelight2");
+import * as Yeelight from "yeelight2";
 
-const light = new Promise<Light>((success, fail) => {
+const light = new Promise<Yeelight.Light>((success, fail) => {
   const timer = setTimeout(() => fail(`Couldn't find light in 2000ms`), 2000);
   Yeelight.discover((myLight) => {
     Yeelight.close();
@@ -12,7 +12,7 @@ const light = new Promise<Light>((success, fail) => {
   })
 });
 
-const Option: { [command: string]: () => Promise<Light> } = {
+const Option: { [command: string]: () => Promise<Yeelight.Light> } = {
   'on': () => light.then((it) => it.set_power('on')),
   'off': () => light.then((it) => it.set_power('off')),
 };
