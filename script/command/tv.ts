@@ -37,7 +37,6 @@ export default class TVCommand extends Command {
 
   handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;
-    console.log(match);
     const command = match[1];
     if (!command) {
       this.bot.sendMessage(chatId, `What should I do with TV?`, KEYBOARD);
