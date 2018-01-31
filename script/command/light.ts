@@ -15,6 +15,12 @@ const tryToConnectLamp = () => new Promise<Yeelight.Light>((success, fail) => {
 const Option: { [command: string]: (light: Promise<Yeelight.Light>) => Promise<Yeelight.Light> } = {
   'on': (light) => light.then((it) => it.set_power('on')),
   'off': (light) => light.then((it) => it.set_power('off')),
+  'bright': (light) => light.then((it) => it.set_bright(75)),
+  'normal': (light) => light.then((it) => it.set_bright(50)),
+  'dark': (light) => light.then((it) => it.set_bright(30)),
+  'red': (light) => light.then((it) => it.set_rgb(0xFF0000)),
+  'blue': (light) => light.then((it) => it.set_rgb(0x0000FF)),
+  'green': (light) => light.then((it) => it.set_rgb(0x00FF00)),
 };
 
 const keys = Object.keys(Option).map((it) => it.toLowerCase());
@@ -22,7 +28,7 @@ const variants = keys.join(`|`);
 
 const KEYBOARD = {
   reply_markup: {
-    keyboard: split(keys.map((it) => ({text: `/light ${it}`})), 2),
+    keyboard: split(keys.map((it) => ({text: `/light ${it}`})), 2, 3, 3),
     one_time_keyboard: true,
     resize_keyboard: true
   }
