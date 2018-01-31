@@ -44,5 +44,8 @@ export const init = (token: string, rootId: number) => {
     setup(Debug)
   ];
 
+  // If we debug locally, we can just handle this error
+  bot.on('polling_error', (error) => console.error(error.message));
+
   bot.sendMessage(rootId, `I'm started successfully at ${(new Date()).toLocaleString()}`);
 };

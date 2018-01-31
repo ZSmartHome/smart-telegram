@@ -8,7 +8,7 @@
     "make": "tsc -p . -outDir build",
     "build": "npm run clean && npm run make",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "ts-node index.ts",
+    "start:dev": "ts-node $NODE_DEBUG_OPTION index.ts",
     "start": "npm run build && node build/index.js",
     "deploy": "pm2 deploy dev update"
   },
