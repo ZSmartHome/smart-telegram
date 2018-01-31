@@ -1,4 +1,5 @@
 import {exec} from "child_process";
+import {KeyboardButton} from "node-telegram-bot-api";
 
 export const shell = (command: string): Promise<string> => {
   return new Promise((onSuccess, onFail) => {
@@ -19,4 +20,31 @@ export const shell = (command: string): Promise<string> => {
         onSuccess(message);
       });
   });
+};
+
+export const split = (buttons: any[], ...rows: number[]): any[][] => {
+  if (rows.length <= 0 || rows.length > 10) {
+    throw new Error(`Invalid rows argument. Should be interval of 0..10`);
+  }
+
+  const result: any[][] = [[]];
+
+  let currentRow = 0; // will be increased to 0 on first element
+  let rowCount = rows[currentRow];
+  for (let i = 0; i < buttons.length; i++) {
+    if (i >= rowCount) {
+      const nextRow = rows[currentRow + 1];
+      if (nextRow > 0) {
+        currentRow++;
+        // move to next row
+        rowCount += nextRow;
+        result[currentRow] = [];
+      } else {
+        // overflow current row
+        rowCount += buttons.length;
+      }
+    }
+    result[currentRow].push(buttons[i]);
+  }
+  return result;
 };
