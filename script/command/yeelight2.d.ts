@@ -21,7 +21,7 @@ declare module "yeelight2" {
     interface Light {
       toggle(): void
 
-      set_power(mode: 'on' | 'off'): Promise<any>
+      set_power(mode: 'on' | 'off', effect?: Effect, duration?: Duration): Promise<any>
 
       /**
        * set_rgb This method is used to change the color of a smart LED.
