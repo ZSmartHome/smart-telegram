@@ -3,21 +3,19 @@ import {Command} from "../command";
 import * as Yeelight from "yeelight2";
 import {split} from "../util";
 
-const light = new Promise<Yeelight.Light>((success, fail) => {
-  const timer = setTimeout(() => fail(`Couldn't find light in 2000ms`), 2000);
-  Yeelight.discover((myLight) => {
-    Yeelight.close();
+const tryToConnectLamp = () => new Promise<Yeelight.Light>((success, fail) => {
+  const timer = setTimeout(() => fail(`Couldn't find lamp in 2000ms`), 2000);
+  Yeelight.discover(function (myLight) {
+    this.close();
     clearTimeout(timer);
     console.log(myLight.name);
     success(myLight);
   })
 });
 
-light.catch((e) => console.error(e));
-
-const Option: { [command: string]: () => Promise<Yeelight.Light> } = {
-  'on': () => light.then((it) => it.set_power('on')),
-  'off': () => light.then((it) => it.set_power('off')),
+const Option: { [command: string]: (light: Promise<Yeelight.Light>) => Promise<Yeelight.Light> } = {
+  'on': (light) => light.then((it) => it.set_power('on')),
+  'off': (light) => light.then((it) => it.set_power('off')),
 };
 
 const keys = Object.keys(Option).map((it) => it.toLowerCase());
@@ -41,7 +39,7 @@ export default class LightCommand extends Command {
     const chatId = msg.chat.id;
     console.log(match);
     const command = match[1];
-    if(!command) {
+    if (!command) {
       this.bot.sendMessage(chatId, `What should I do with Light?`, KEYBOARD);
       return;
     }
@@ -53,6 +51,8 @@ export default class LightCommand extends Command {
       return;
     }
 
-    action().catch((e) => console.error(e));
+    action(tryToConnectLamp())
+      .then(() => this.bot.sendMessage(chatId, `Lamp has received you message`))
+      .catch((error) => this.bot.sendMessage(chatId, error));
   }
 }

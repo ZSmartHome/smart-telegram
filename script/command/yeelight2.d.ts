@@ -8,10 +8,14 @@ declare module "yeelight2" {
 
       name: string
     }
+
+    interface Closable {
+      close(): void
+    }
   }
 
   class Yeelight {
-    static discover(callback: (light: Yeelight.Light) => void): void;
+    static discover(callback: (this: Yeelight.Closable, light: Yeelight.Light) => void): void;
 
     static close(): void
   }
