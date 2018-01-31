@@ -1,5 +1,5 @@
 import * as TelegramBot from "node-telegram-bot-api";
-import {shell} from "../util";
+import {shell, split} from "../util";
 import {Command} from "../command";
 
 /*
@@ -21,7 +21,13 @@ const TvCommand: { [command: string]: string } = {
 
 const keys = Object.keys(TvCommand).map((it) => it.toLowerCase());
 const variants = keys.join(`|`);
-const buttons = keys.map((it) => ({text: `/tv ${it}`}));
+const KEYBOARD = {
+  reply_markup: {
+    keyboard: split(keys.map((it) => ({text: `/tv ${it}`})), 2, 3),
+    one_time_keyboard: true,
+    resize_keyboard: true
+  }
+};
 
 export default class TVCommand extends Command {
   readonly name = `tv`;
@@ -34,20 +40,7 @@ export default class TVCommand extends Command {
     console.log(match);
     const command = match[1];
     if (!command) {
-      this.bot.sendMessage(chatId, `What should I do with TV?`, {
-        reply_markup: {
-          keyboard: [
-            [
-              buttons[0], buttons[1]
-            ],
-            [
-              buttons[2], buttons[3], buttons[4]
-            ]
-          ],
-          one_time_keyboard: true,
-          resize_keyboard: true
-        }
-      });
+      this.bot.sendMessage(chatId, `What should I do with TV?`, KEYBOARD);
       return;
     }
     const action = TvCommand[command];
