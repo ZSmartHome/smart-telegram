@@ -8,7 +8,6 @@ const tryToConnectLamp = () => new Promise<Yeelight.Light>((success, fail) => {
   Yeelight.discover(function (myLight) {
     this.close();
     clearTimeout(timer);
-    console.log(myLight.name);
     success(myLight);
   })
 });
@@ -51,8 +50,13 @@ export default class LightCommand extends Command {
       return;
     }
 
-    action(tryToConnectLamp())
+    const lamp = tryToConnectLamp();
+    action(lamp)
       .then(() => this.bot.sendMessage(chatId, `Lamp has received you message`))
       .catch((error) => this.bot.sendMessage(chatId, error));
+    lamp.catch(() => lamp).then((it) => {
+      it.exit();
+      console.log(`Connection to lamp closed`);
+    });
   }
 }
