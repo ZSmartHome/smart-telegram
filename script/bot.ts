@@ -7,24 +7,16 @@ import Debug from "./command/debuglog";
 import {init as manageInit, Manage} from "./manage";
 import {Command} from "./command";
 
-const CONFIG = {
-  polling: {
-    params: {
-      timeout: 500
-    }
-  }
-};
-
 interface CommandConstructor {
-  new (bot: TelegramBot, manage: Manage): Command;
+  new(bot: TelegramBot, manage: Manage): Command;
 }
 
-const EMPTY:Array<string> = [];
-const EMPTY_REGEXP:RegExpExecArray = EMPTY as RegExpExecArray;
+const EMPTY: Array<string> = [];
+const EMPTY_REGEXP: RegExpExecArray = EMPTY as RegExpExecArray;
 
-export const init = (token: string, rootId: number) => {
+export const init = (token: string, rootId: number, config: any) => {
   // Create a bot that uses 'polling' to fetch new updates
-  const bot = new TelegramBot(token, CONFIG);
+  const bot = new TelegramBot(token, config);
   const manage = manageInit(rootId);
 
   const setup = (ctor: CommandConstructor): Command => {

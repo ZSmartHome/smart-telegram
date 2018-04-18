@@ -16,5 +16,19 @@ if (!rootId) {
 
 const rootIdNumber = parseInt(rootId, 10);
 
-init(token, rootIdNumber);
+const clientConfig: any = {
+  polling: {
+    params: {
+      timeout: 500
+    }
+  }
+};
+
+const proxy = process.env.PROXY;
+if (proxy) {
+  clientConfig.request = {proxy}
+}
+
+
+init(token, rootIdNumber, clientConfig);
 
