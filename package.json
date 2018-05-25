@@ -37,6 +37,7 @@
   "dependencies": {
     "dotenv": "4.0.0",
     "node-telegram-bot-api": "0.29.0",
-    "yeelight2": "1.3.5"
+    "yeelight2": "1.3.5",
+    "socks5-https-client": "1.2.1"
   }
 }
