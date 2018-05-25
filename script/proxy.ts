@@ -1,5 +1,5 @@
 import {parse} from "url";
-import Agent from "socks5-https-client/lib/Agent";
+import {HttpsAgent, auth} from "socksv5";
 
 export default (url?: string): object | undefined => {
   if (!url) return undefined;
@@ -16,13 +16,11 @@ export default (url?: string): object | undefined => {
         const proxy = parsed.query;
         return {
           strictSSL: true,
-          agentClass: Agent,
+          agentClass: HttpsAgent,
           agentOptions: {
-            socksHost: proxy.server,
-            socksPort: parseInt(proxy.port),
-            // If authorization is needed:
-            socksUsername: proxy.user,
-            socksPassword: proxy.pass
+            proxyHost: proxy.server,
+            proxyPort: parseInt(proxy.port),
+            auths: [ auth.UserPassword(proxy.user, proxy.pass) ]
           }
         }
       }

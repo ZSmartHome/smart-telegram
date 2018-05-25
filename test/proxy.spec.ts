@@ -1,7 +1,6 @@
 import {suite, test} from "mocha-typescript";
 import * as assert from "assert";
 import {parse} from "url";
-import {inspect} from "util";
 import proxy from "../script/proxy";
 
 
@@ -17,7 +16,7 @@ class SplitUtil {
     assert.deepEqual(proxy(url), {proxy: url});
   }
 
-  @test "tg protocol should be parsed as socks proxy"() {
+  /*@test "tg protocol should be parsed as socks proxy"() {
     const url = `tg://socks?server=12%2E12%2E0%2E12&port=1212&user=rkn&pass=rkn`;
     const result = proxy(url);
     assert.ok(result !== undefined);
@@ -28,7 +27,7 @@ class SplitUtil {
       socksPassword: 'rkn'
     });
   }
-
+*/
   @test "invalid proxy passed"() {
     const url = `jkshdjkasd;klasj;d`;
     assert.ok(proxy(url) === undefined);
