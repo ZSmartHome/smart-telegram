@@ -1,13 +1,13 @@
-import * as TelegramBot from "node-telegram-bot-api";
-import {Command} from "../command";
+import * as TelegramBot from 'node-telegram-bot-api';
+import {Command} from '../command';
 
 export default class EchoCommand extends Command {
-  name = `echo`;
-  description = `Echoes sent message back to you`;
-  pattern = `\/${this.name} (.+)`;
+  public name = `echo`;
+  public description = `Echoes sent message back to you`;
+  public pattern = `\/${this.name} (.+)`;
 
   // Matches "/echo [whatever]"
-  handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
+  public handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
     // 'msg' is the received Message from Telegram
     // 'match' is the result of executing the regexp above on the text content
     // of the message

@@ -1,8 +1,8 @@
-import {parse} from "url";
-import {HttpsAgent, auth} from "socksv5";
+import {auth, HttpsAgent} from 'socksv5';
+import {parse} from 'url';
 
 export default (url?: string): object | undefined => {
-  if (!url) return undefined;
+  if (!url) { return undefined; }
 
   url = url.toLowerCase();
   const parsed = parse(url, true);
@@ -19,12 +19,12 @@ export default (url?: string): object | undefined => {
           agentClass: HttpsAgent,
           agentOptions: {
             proxyHost: proxy.server,
-            proxyPort: parseInt(proxy.port),
-            auths: [ auth.UserPassword(proxy.user, proxy.pass) ]
-          }
-        }
+            proxyPort: parseInt(proxy.port, 10),
+            auths: [ auth.UserPassword(proxy.user, proxy.pass) ],
+          },
+        };
       }
   }
 
   return undefined;
-}
+};

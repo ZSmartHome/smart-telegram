@@ -1,5 +1,4 @@
-import {exec} from "child_process";
-import {KeyboardButton} from "node-telegram-bot-api";
+import {exec} from 'child_process';
 
 export const shell = (command: string): Promise<string> => {
   return new Promise((onSuccess, onFail) => {
@@ -9,7 +8,7 @@ export const shell = (command: string): Promise<string> => {
         console.log(`Command: ${command} complete`, error, stdout, stderr);
         if (error) {
           onFail(`exec error: ${error}`);
-          return
+          return;
         }
         let message;
         if (stdout || stderr) {

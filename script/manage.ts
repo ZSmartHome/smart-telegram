@@ -1,5 +1,5 @@
-import * as TelegramBot from "node-telegram-bot-api";
-import {User} from "node-telegram-bot-api";
+import * as TelegramBot from 'node-telegram-bot-api';
+import {User} from 'node-telegram-bot-api';
 
 export interface Manage {
   auth(callback: (...args: any[]) => void): (...args: any[]) => void;
@@ -15,7 +15,7 @@ class UserManage implements Manage {
     this.allowedUserIdSet.add(rootUserId);
   }
 
-  isAuthorized(user?: User): boolean {
+  public isAuthorized(user?: User): boolean {
     if (!user) {
       return false;
     }
@@ -23,7 +23,7 @@ class UserManage implements Manage {
     return this.allowedUserIdSet.has(user.id);
   }
 
-  auth(fn: (...args: any[]) => void): (...args: any[]) => void {
+  public auth(fn: (...args: any[]) => void): (...args: any[]) => void {
     return (...args: any[]) => {
 
       const message = args[0] as TelegramBot.Message;
@@ -36,7 +36,7 @@ class UserManage implements Manage {
       }
 
       fn(...args);
-    }
+    };
   }
 }
 

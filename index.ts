@@ -1,9 +1,8 @@
 process.env.NTBA_FIX_319 = `true`;
 
 import {config} from 'dotenv';
-import {init} from "./script/bot";
-import proxy from "./script/proxy";
-
+import {init} from './script/bot';
+import proxy from './script/proxy';
 
 config();
 // replace the value below with the Telegram token you receive from @BotFather
@@ -23,12 +22,11 @@ const rootIdNumber = parseInt(rootId, 10);
 const clientConfig: any = {
   polling: {
     params: {
-      timeout: 500
-    }
-  }
+      timeout: 500,
+    },
+  },
 };
 
 clientConfig.request = proxy(process.env.PROXY);
 
 init(token, rootIdNumber, clientConfig);
-

@@ -1,13 +1,13 @@
-import * as TelegramBot from "node-telegram-bot-api";
-import {Command} from "../command";
+import * as TelegramBot from 'node-telegram-bot-api';
+import {Command} from '../command';
 
 export default class MeCommand extends Command {
-  name = `me`;
-  description = `Prints out current user info`;
-  pattern = `\/me`;
-  authRequired = false;
+  public name = `me`;
+  public description = `Prints out current user info`;
+  public pattern = `\/me`;
+  public authRequired = false;
 
-  handle(msg: TelegramBot.Message): void {
+  public handle(msg: TelegramBot.Message): void {
     const me = msg.from;
     let message;
     if (!me) {

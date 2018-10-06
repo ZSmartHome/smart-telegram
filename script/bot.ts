@@ -1,17 +1,17 @@
-import * as TelegramBot from "node-telegram-bot-api";
-import Echo from "./command/echo";
-import TV from "./command/tv";
-import Light from "./command/light";
-import Me from "./command/me";
-import Debug from "./command/debuglog";
-import {init as manageInit, Manage} from "./manage";
-import {Command} from "./command";
+import * as TelegramBot from 'node-telegram-bot-api';
+import {Command} from './command';
+import Debug from './command/debuglog';
+import Echo from './command/echo';
+import Light from './command/light';
+import Me from './command/me';
+import TV from './command/tv';
+import {init as manageInit, Manage} from './manage';
 
 interface CommandConstructor {
   new(bot: TelegramBot, manage: Manage): Command;
 }
 
-const EMPTY: Array<string> = [];
+const EMPTY: string[] = [];
 const EMPTY_REGEXP: RegExpExecArray = EMPTY as RegExpExecArray;
 
 export const init = (token: string, rootId: number, config: any) => {
@@ -33,12 +33,13 @@ export const init = (token: string, rootId: number, config: any) => {
     setup(TV),
     setup(Light),
     setup(Me),
-    setup(Debug)
+    setup(Debug),
   ];
 
   // If we debug locally, we can just handle this error
   bot.on('polling_error', (error) => console.error(`POLL_ERROR: ${error.message}`));
   bot.on('error', (error) => console.error(`FATAL_ERROR: ${error.message}`));
 
-  bot.sendMessage(rootId, `I'm started successfully at ${(new Date()).toLocaleString()}`);
+  bot.sendMessage(rootId, `I'm started successfully at ${(new Date()).toLocaleString()}.`);
+  bot.sendMessage(rootId, `List of available commands:\n${commands.map((it) => it.name).join(`\n`)}`);
 };

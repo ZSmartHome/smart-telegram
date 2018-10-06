@@ -1,17 +1,16 @@
-import {suite, test} from "mocha-typescript";
-import * as assert from "assert";
-import {parse} from "url";
-import proxy from "../script/proxy";
+import * as assert from 'assert';
+import {suite, test} from 'mocha-typescript';
+import {parse} from 'url';
+import proxy from '../script/proxy';
 
-
-@suite("Configure proxy")
+@suite('Configure proxy')
 class SplitUtil {
-  @test "http proxy should configure noremal"() {
+  @test public 'http proxy should configure noremal'() {
     const url = `http://localhost:1345`;
     assert.deepEqual(proxy(url), {proxy: url});
   }
 
-  @test "https proxy should configure noremal"() {
+  @test public 'https proxy should configure noremal'() {
     const url = `https://localhost:1345`;
     assert.deepEqual(proxy(url), {proxy: url});
   }
@@ -28,20 +27,20 @@ class SplitUtil {
     });
   }
 */
-  @test "invalid proxy passed"() {
+  @test public 'invalid proxy passed'() {
     const url = `jkshdjkasd;klasj;d`;
     assert.ok(proxy(url) === undefined);
   }
 
-  @test "empty proxy passed"() {
+  @test public 'empty proxy passed'() {
     assert.ok(proxy(``) === undefined);
   }
 
-  @test "no proxy passed"() {
+  @test public 'no proxy passed'() {
     assert.ok(proxy() === undefined);
   }
 
-  @test "tg protocol correct parse"() {
+  @test public 'tg protocol correct parse'() {
     const parsed = parse(`tg://socks?server=12%2E12%2E0%2E12&port=1212&user=rkn&pass=rkn`, true);
     assert.equal(parsed.protocol, `tg:`);
     assert.equal(parsed.host, `socks`);
@@ -49,7 +48,7 @@ class SplitUtil {
       server: '12.12.0.12',
       port: '1212',
       user: 'rkn',
-      pass: 'rkn'
+      pass: 'rkn',
     });
   }
 

@@ -1,6 +1,6 @@
-import * as TelegramBot from "node-telegram-bot-api";
-import {shell, split} from "../util";
-import {Command} from "../command";
+import * as TelegramBot from 'node-telegram-bot-api';
+import {Command} from '../command';
+import {shell, split} from '../util';
 
 /*
 # Switch on
@@ -11,12 +11,12 @@ import {Command} from "../command";
   echo "tx 4F:82:10:00" | cec-client -s
 */
 const TvCommand: { [command: string]: string } = {
-  'on': `on 0`,
-  'off': `standby 0`,
+  on: `on 0`,
+  off: `standby 0`,
 
-  'chromecast': `tx 4F:82:10:00`,
-  'raspberry': `tx 4F:82:20:00`,
-  'xbox': `tx 4F:82:30:00`,
+  chromecast: `tx 4F:82:10:00`,
+  raspberry: `tx 4F:82:20:00`,
+  xbox: `tx 4F:82:30:00`,
 };
 
 const keys = Object.keys(TvCommand).map((it) => it.toLowerCase());
@@ -25,17 +25,16 @@ const KEYBOARD = {
   reply_markup: {
     keyboard: split(keys.map((it) => ({text: `/tv ${it}`})), 2, 3),
     one_time_keyboard: true,
-    resize_keyboard: true
-  }
+    resize_keyboard: true,
+  },
 };
 
 export default class TVCommand extends Command {
-  readonly name = `tv`;
-  readonly description = `Controls TV-set`;
-  readonly pattern = `\/${this.name}.?(${variants})?`;
+  public readonly name = `tv`;
+  public readonly description = `Controls TV-set`;
+  public readonly pattern = `\/${this.name}.?(${variants})?`;
 
-
-  handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
+  public handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;
     const command = match[1];
     if (!command) {
