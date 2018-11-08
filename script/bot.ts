@@ -41,5 +41,5 @@ export const init = (token: string, rootId: number, config: any) => {
   bot.on('error', (error) => console.error(`FATAL_ERROR: ${error.message}`));
 
   bot.sendMessage(rootId, `I'm started successfully at ${(new Date()).toLocaleString()}.`);
-  bot.sendMessage(rootId, `List of available commands:\n${commands.map((it) => it.name).join(`\n`)}`);
+  bot.sendMessage(rootId, `List of available commands:\n${commands.map((it) => `/${it.name}`).join(`\n`)}`);
 };
