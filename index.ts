@@ -30,3 +30,7 @@ const clientConfig: any = {
 clientConfig.request = proxy(process.env.PROXY);
 
 init(token, rootIdNumber, clientConfig);
+
+process.on('uncaughtException', (err) => {
+  console.log(`UNCAUGHT EX: ${err.message}`, err);
+});
