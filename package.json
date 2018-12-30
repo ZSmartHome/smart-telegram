@@ -9,7 +9,7 @@
     "build": "npm run clean && npm run make",
     "lint": "tslint -p . -t verbose",
     "test": "npm run lint && mocha $NODE_DEBUG_OPTION",
-    "start:dev": "ts-node $NODE_DEBUG_OPTION index.ts",
+    "start:dev": "ts-node $NODE_DEBUG_OPTION script/commander/lamp.ts",
     "start": "npm run build && node build/index.js",
     "deploy": "pm2 deploy dev update"
   },
