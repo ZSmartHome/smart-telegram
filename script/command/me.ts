@@ -14,7 +14,7 @@ export default class MeCommand extends Command {
       message = `You are anonymous =(`;
     } else {
       message = `Here what I know about you:
-id:${me.id} ${me.first_name || ``} ${me.last_name || ``} ${me.username ? `@${me.username}` : ``} \
+id:${me.id} ${me.first_name || ``} ${me.last_name || ``}${me.username ? ` @${me.username}` : ``} \
 (${this.manage.isAuthorized(me) ? `` : `not `}authorized)`;
     }
     this.bot.sendMessage(msg.chat.id, message, {parse_mode: `Markdown`});
