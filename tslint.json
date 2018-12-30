@@ -12,6 +12,7 @@
       "match-declaration-order",
       "shorthand-first"
     ],
+    "ordered-imports": false,
     "quotemark": [true, "single"]
   },
   "rulesDirectory": []
