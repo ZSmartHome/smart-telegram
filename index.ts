@@ -17,7 +17,18 @@ if (!rootId) {
   throw new Error(`ROOT_ID is not set`);
 }
 
-const rootIdNumber = parseInt(rootId, 10);
+const authorized = [parseInt(rootId, 10)];
+
+const allowedUsersList = process.env.AUTHORIZED;
+if (allowedUsersList) {
+  const allowed = allowedUsersList.split(`,`)
+    .map((it) => it.trim())
+    .map((it) => parseInt(it, 10))
+    .filter((it) => Number.isInteger(it));
+
+  authorized.concat(allowed);
+  console.log(`I've loaded ${allowed.length} authorized users`);
+}
 
 const clientConfig: any = {
   polling: {
@@ -29,7 +40,7 @@ const clientConfig: any = {
 
 clientConfig.request = proxy(process.env.PROXY);
 
-init(token, rootIdNumber, clientConfig);
+init(token, authorized, clientConfig);
 
 process.on('uncaughtException', (err) => {
   console.log(`UNCAUGHT EX: ${err.message}`, err);

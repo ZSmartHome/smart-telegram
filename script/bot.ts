@@ -14,10 +14,11 @@ interface CommandConstructor {
 const EMPTY: string[] = [];
 const EMPTY_REGEXP: RegExpExecArray = EMPTY as RegExpExecArray;
 
-export const init = (token: string, rootId: number, config: any) => {
+export const init = (token: string, authorized: number[], config: any) => {
+  const rootId = authorized[0];
   // Create a bot that uses 'polling' to fetch new updates
   const bot = new TelegramBot(token, config);
-  const manage = manageInit([rootId]);
+  const manage = manageInit(authorized);
 
   const addHandler = (command: Command): Command => {
     const regExp = new RegExp(command.pattern, `i`);
