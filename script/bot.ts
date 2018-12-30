@@ -35,7 +35,7 @@ export const init = (token: string, rootId: number, config: any) => {
     setup(TV),
     setup(Light),
     setup(Me),
-    setup(Debug),
+    // setup(Debug), Disable debug
   ];
 
   commands.push(addHandler(new Help(bot, manage, commands)));
