@@ -4,6 +4,7 @@ import Debug from './command/debuglog';
 import Echo from './command/echo';
 import Light from './command/light';
 import Me from './command/me';
+import Help from './command/help';
 import TV from './command/tv';
 import {init as manageInit, Manage} from './manage';
 
@@ -19,14 +20,15 @@ export const init = (token: string, rootId: number, config: any) => {
   const bot = new TelegramBot(token, config);
   const manage = manageInit(rootId);
 
-  const setup = (ctor: CommandConstructor): Command => {
-    const command = new ctor(bot, manage);
+  const addHandler = (command) => {
     const regExp = new RegExp(command.pattern, `i`);
     const handle = command.handle.bind(command);
     const commandHandle = command.authRequired ? manage.auth(handle) : handle;
     bot.onText(regExp, (msg, match) => commandHandle(msg, match || EMPTY_REGEXP));
     return command;
   };
+
+  const setup = (ctor: CommandConstructor): Command => addHandler(new ctor(bot, manage));
 
   const commands = [
     setup(Echo),
@@ -35,6 +37,8 @@ export const init = (token: string, rootId: number, config: any) => {
     setup(Me),
     setup(Debug),
   ];
+
+  commands.push(addHandler(new Help(bot, manage, commands)));
 
   // If we debug locally, we can just handle this error
   bot.on('polling_error', (error) => console.error(`POLL_ERROR: ${error.message}`));
