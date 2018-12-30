@@ -20,7 +20,7 @@ export const init = (token: string, rootId: number, config: any) => {
   const bot = new TelegramBot(token, config);
   const manage = manageInit(rootId);
 
-  const addHandler = (command) => {
+  const addHandler = (command: Command): Command => {
     const regExp = new RegExp(command.pattern, `i`);
     const handle = command.handle.bind(command);
     const commandHandle = command.authRequired ? manage.auth(handle) : handle;
