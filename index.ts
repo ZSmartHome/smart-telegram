@@ -26,7 +26,7 @@ if (allowedUsersList) {
     .map((it) => parseInt(it, 10))
     .filter((it) => Number.isInteger(it));
 
-  authorized.concat(allowed);
+  allowed.forEach((it) => authorized.push(it));
   console.log(`I've loaded ${allowed.length} authorized users`);
 }
 
