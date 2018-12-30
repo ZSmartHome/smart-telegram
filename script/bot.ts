@@ -1,6 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 import {Command} from './command';
-import Debug from './command/debuglog';
 import Echo from './command/echo';
 import Light from './command/light';
 import Me from './command/me';
@@ -18,7 +17,7 @@ const EMPTY_REGEXP: RegExpExecArray = EMPTY as RegExpExecArray;
 export const init = (token: string, rootId: number, config: any) => {
   // Create a bot that uses 'polling' to fetch new updates
   const bot = new TelegramBot(token, config);
-  const manage = manageInit(rootId);
+  const manage = manageInit([rootId]);
 
   const addHandler = (command: Command): Command => {
     const regExp = new RegExp(command.pattern, `i`);
