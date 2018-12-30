@@ -3,6 +3,7 @@ import {User} from 'node-telegram-bot-api';
 
 const AUTHORIZED_USERS = new Set<number>();
 try {
+  // tslint:disable-next-line
   const data = require(`../authorized.json`);
   for (const [name, id] of Object.entries(data)) {
     console.log(`Added ${name} as authorized`);
