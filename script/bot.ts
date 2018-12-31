@@ -5,6 +5,7 @@ import Light from './command/light';
 import Me from './command/me';
 import Help from './command/help';
 import TV from './command/tv';
+import Start from './command/start';
 import {init as manageInit, Manage} from './manage';
 
 interface CommandConstructor {
@@ -39,6 +40,7 @@ export const init = (token: string, authorized: number[], config: any) => {
   ];
 
   commands.push(addHandler(new Help(bot, manage, commands)));
+  setup(Start);
 
   // If we debug locally, we can just handle this error
   bot.on('polling_error', (error) => console.error(`POLL_ERROR: ${error.message}`));
