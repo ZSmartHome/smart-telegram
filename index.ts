@@ -7,6 +7,7 @@ import proxy from './script/proxy';
 config();
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_BOT_TOKEN;
+const baseApiUrl = process.env.BASE_API_URL;
 
 if (!token) {
   throw new Error(`Bot token was not passed`);
@@ -36,6 +37,7 @@ const clientConfig: any = {
       timeout: 500,
     },
   },
+  baseApiUrl
 };
 
 clientConfig.request = proxy(process.env.PROXY);
