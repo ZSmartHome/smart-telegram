@@ -37,7 +37,7 @@ const clientConfig: any = {
       timeout: 500,
     },
   },
-  baseApiUrl
+  baseApiUrl,
 };
 
 clientConfig.request = proxy(process.env.PROXY);
