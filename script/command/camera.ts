@@ -1,0 +1,43 @@
+import * as TelegramBot from 'node-telegram-bot-api';
+import {Command} from '../command';
+import {Manage} from '../manage';
+import {Url} from 'url';
+import {get} from 'http';
+
+export default class CameraCommand extends Command {
+  public name = `camera`;
+  public description = `Sends camera picture`;
+  public pattern = `\/${this.name}`;
+
+  constructor(bot: TelegramBot,
+              manage: Manage,
+              private readonly url: Url) {
+    super(bot, manage);
+  }
+
+  public handle(msg: TelegramBot.Message): void {
+    // 'msg' is the received Message from Telegram
+
+    const chatId = msg.chat.id;
+
+    get(this.url, (response) => {
+      const statusCode = response.statusCode;
+      if (statusCode !== 200) {
+        this.bot.sendMessage(chatId, `Failed to fetch media. Response code: ${statusCode}`);
+      } else {
+        response.on('error', (e) => {
+          this.bot.sendMessage(chatId, `Failed to fetch media. Error: ${e.message}`);
+        });
+        const buffer: any[] = [];
+        response.on('data', (d) => {
+          buffer.push(d);
+        });
+        response.on('end', () => {
+          this.bot.sendPhoto(chatId, Buffer.concat(buffer));
+        });
+      }
+    }).on('error', (e) => {
+      this.bot.sendMessage(chatId, `Failed to fetch media. Error: ${e.message}`);
+    });
+  }
+}

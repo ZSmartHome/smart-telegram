@@ -6,10 +6,12 @@ import Me from './command/me';
 import Help from './command/help';
 import TV from './command/tv';
 import Start from './command/start';
+import Camera from './command/camera';
+import {URL} from 'url';
 import {init as manageInit, Manage} from './manage';
 
 interface CommandConstructor {
-  new(bot: TelegramBot, manage: Manage): Command;
+  new(bot: TelegramBot, manage: Manage, ...params: any[]): Command;
 }
 
 const EMPTY: string[] = [];
@@ -29,7 +31,7 @@ export const init = (token: string, authorized: number[], config: any) => {
     return command;
   };
 
-  const setup = (ctor: CommandConstructor): Command => addHandler(new ctor(bot, manage));
+  const setup = (ctor: CommandConstructor, ...params: any[]): Command => addHandler(new ctor(bot, manage, ...params));
 
   const commands = [
     setup(Echo),
@@ -39,7 +41,13 @@ export const init = (token: string, authorized: number[], config: any) => {
     // setup(Debug), Disable debug
   ];
 
-  commands.push(addHandler(new Help(bot, manage, commands)));
+  const cameraUrl = process.env.CAMERA_URL; // TODO: init all vars in one place
+  if (cameraUrl) {
+    commands.push(setup(Camera, new URL(cameraUrl)));
+  }
+
+  commands.push(setup(Help, commands));
+
   setup(Start);
 
   // If we debug locally, we can just handle this error
