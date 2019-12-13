@@ -8,7 +8,8 @@ module.exports = {
     // First application
     {
       name: 'Smart TelegramBot',
-      script: 'build/index.js'
+      script: 'build/index.js',
+      watch: true
     }
   ],
 
