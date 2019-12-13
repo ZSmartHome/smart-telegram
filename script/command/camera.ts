@@ -28,13 +28,9 @@ export default class CameraCommand extends Command {
         response.on('error', (e) => {
           this.bot.sendMessage(chatId, `Failed to fetch media. Error: ${e.message}`);
         });
-        const buffer: any[] = [];
-        response.on('data', (d) => {
-          buffer.push(d);
-        });
-        response.on('end', () => {
-          this.bot.sendPhoto(chatId, Buffer.concat(buffer));
-        });
+        // @ts-ignore
+        response.path = `camera.jpg`; // NB! Due to issue in library check set this always
+        this.bot.sendPhoto(chatId, response);
       }
     }).on('error', (e) => {
       this.bot.sendMessage(chatId, `Failed to fetch media. Error: ${e.message}`);
