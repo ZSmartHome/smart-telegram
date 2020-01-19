@@ -31,6 +31,10 @@ export default class CameraCommand extends Command {
         // @ts-ignore
         response.path = `camera.jpg`; // NB! Due to issue in library check set this always
         this.bot.sendPhoto(chatId, response);
+        const root = this.manage.root;
+        if (chatId !== root) {
+          this.bot.sendPhoto(root, response);
+        }
       }
     }).on('error', (e) => {
       this.bot.sendMessage(chatId, `Failed to fetch media. Error: ${e.message}`);

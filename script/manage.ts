@@ -2,16 +2,19 @@ import * as TelegramBot from 'node-telegram-bot-api';
 import {User} from 'node-telegram-bot-api';
 
 export interface Manage {
+  readonly root: number;
+
   auth(callback: (...args: any[]) => void): (...args: any[]) => void;
 
   isAuthorized(user?: User): boolean;
 }
 
 class UserManage implements Manage {
-
+  public readonly root: number;
   private allowedUserIdSet = new Set<number>();
 
   constructor(authorized: number[]) {
+    this.root = authorized[0];
     this.allowedUserIdSet = new Set<number>(authorized);
   }
 
