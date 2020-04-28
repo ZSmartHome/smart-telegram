@@ -6,7 +6,7 @@ import {Manage} from '../manage';
 export default class InlineKeyboard extends Command {
   public name = `test`;
   public description = `Opens test page`;
-  public pattern = `\/${this.name} (.+)`;
+  public pattern = `\/${this.name}.?(.+)?`;
 
   constructor(bot: TelegramBot, manage: Manage) {
     super(bot, manage);
