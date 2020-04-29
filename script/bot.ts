@@ -43,6 +43,10 @@ export const init = (token: string, authorized: number[], config: any) => {
   bot.on('polling_error', (error) => console.error(`POLL_ERROR: ${error.message}`));
   bot.on('error', (error) => console.error(`FATAL_ERROR: ${error.message}`));
 
-  bot.sendMessage(rootId, `I'm started successfully at ${(new Date()).toLocaleString()}.`);
-  bot.sendMessage(rootId, `List of available commands:\n${commands.map((it) => `/${it.name}`).join(`\n`)}`);
+  const text = [
+    `I'm started successfully at ${(new Date()).toLocaleString()}.`,
+    `List of available commands:`,
+    commands.map((it) => `/${it.name}`).join(`\n`),
+  ];
+  bot.sendMessage(rootId, text.join(`\n`), {disable_notification: true});
 };
