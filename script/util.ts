@@ -47,3 +47,5 @@ export const split = <T>(buttons: T[], ...rows: number[]): T[][] => {
   }
   return result;
 };
+
+export const each = <T>(o: { [s: string]: T } | { [n: number]: T }): Array<[string, T]> => Object.entries(o);

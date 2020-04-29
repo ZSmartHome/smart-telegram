@@ -6,6 +6,14 @@ export default abstract class CallbackCommand extends Command {
 
   protected abstract async handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error>;
 
+  protected async answer(id: string, text: string, alert = false): Promise<boolean | Error> {
+    return this.bot.answerCallbackQuery({
+      callback_query_id: id,
+      text,
+      show_alert: alert,
+    });
+  }
+
   protected subscribe() {
     super.subscribe();
     // register callback on init
@@ -14,11 +22,7 @@ export default abstract class CallbackCommand extends Command {
       if (isAuthorized) {
         this.handleCallback(q);
       } else {
-        this.bot.answerCallbackQuery({
-          callback_query_id: q.id,
-          show_alert: true,
-          text: `You are not allowed on this action!`,
-        });
+        this.answer(q.id, `You are not allowed on this action!`, true);
       }
     });
   }
