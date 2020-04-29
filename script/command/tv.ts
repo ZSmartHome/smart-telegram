@@ -16,7 +16,7 @@ const TvCommand: { [command: string]: string } = {
 
   chromecast: `tx 4F:82:10:00`,
   raspberry: `tx 4F:82:20:00`,
-  xbox: `tx 4F:82:30:00`,
+  hdmi: `tx 4F:82:30:00`,
 };
 
 const keys = Object.keys(TvCommand).map((it) => it.toLowerCase());
