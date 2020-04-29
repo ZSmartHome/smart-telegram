@@ -13,12 +13,13 @@ export abstract class Command {
 
   constructor(protected readonly bot: TelegramBot,
               protected readonly manage: Manage) {
-    this.addHandler();
+    // A dirty hack, to execute right after hierarchy init
+    process.nextTick(() => this.subscribe());
   }
 
   public abstract handle(msg: TelegramBot.Message, match: RegExpExecArray): void;
 
-  private addHandler() {
+  protected subscribe() {
     const regExp = new RegExp(this.pattern, `i`);
     const handle = this.handle.bind(this);
     const commandHandle = this.authRequired ? this.manage.auth(handle) : handle;

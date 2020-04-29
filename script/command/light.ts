@@ -1,4 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
+import {AnswerCallbackQueryOptions} from 'node-telegram-bot-api';
 import * as Yeelight from 'yeelight2';
 import {split} from '../util';
 import CallbackCommand from './base/callbackcommand';
@@ -12,22 +13,36 @@ const tryToConnectLamp = () => new Promise<Yeelight.Light>((success, fail) => {
   });
 });
 
+type ExecuteAction = (light: Yeelight.Light) => Promise<Yeelight.Light>;
+
 interface Option {
   name: string;
-  execute: (light: Promise<Yeelight.Light>) => Promise<Yeelight.Light>;
+  execute: ExecuteAction;
 }
 
 const OPTIONS: { [command: string]: Option } = {
-  on: {name: `On 💡`, execute: (light) => light.then((it) => it.set_power('on'))},
-  off: {name: `Off 💡`, execute: (light) => light.then((it) => it.set_power('off'))},
-  bright: {name: `Bright ☀️`, execute: (light) => light.then((it) => it.set_bright(75))},
-  normal: {name: `Питер 🌤️`, execute: (light) => light.then((it) => it.set_bright(50))},
-  dark: {name: `Dark ☁️`, execute: (light) => light.then((it) => it.set_bright(30))},
-  red: {name: `🔴`, execute: (light) => light.then((it) => it.set_rgb(0xFF0000))},
-  blue: {name: `🔵`, execute: (light) => light.then((it) => it.set_rgb(0x0000FF))},
-  green: {name: `🟢`, execute: (light) => light.then((it) => it.set_rgb(0x00FF00))},
+  on: {name: `On 💡`, execute: (it) => it.set_power('on')},
+  off: {name: `Off 💡`, execute: (it) => it.set_power('off')},
+  bright: {name: `Bright ☀️`, execute: (it) => it.set_bright(75)},
+  normal: {name: `Питер 🌤️`, execute: (it) => it.set_bright(50)},
+  dark: {name: `Dark ☁️`, execute: (it) => it.set_bright(30)},
+  red: {name: `🔴`, execute: (it) => it.set_rgb(0xFF0000)},
+  blue: {name: `🔵`, execute: (it) => it.set_rgb(0x0000FF)},
+  green: {name: `🟢`, execute: (it) => it.set_rgb(0x00FF00)},
 };
-
+const execute = async (option: Option): Promise<any> => {
+  let lamp: Yeelight.Light | undefined;
+  try {
+    lamp = await tryToConnectLamp();
+    return option.execute(lamp);
+  } finally {
+    if (lamp) {
+      console.log(`Closing connection to lamp...`);
+      lamp.exit();
+      console.log(`Connection to lamp closed`);
+    }
+  }
+};
 const keys = Object.keys(OPTIONS).map((it) => it.toLowerCase());
 const variants = keys.join(`|`);
 
@@ -40,12 +55,18 @@ const COMMAND_KEYBOARD: TelegramBot.SendMessageOptions = {
 };
 const INLINE_KEYBOARD: TelegramBot.SendMessageOptions = {
   reply_markup: {
-    inline_keyboard: split(keys.map((command) => ({
-      text: `/light ${command}`,
-      callback_data: command,
+    inline_keyboard: split(Object.entries(OPTIONS).map(([command, option]) => ({
+      text: option.name,
+      callback_data: command.toLowerCase(),
     })), 2, 3, 3),
   },
 };
+
+const answer = (id: string, text: string, alert = false): AnswerCallbackQueryOptions => ({
+  callback_query_id: id,
+  text,
+  show_alert: alert,
+});
 
 export default class LightCommand extends CallbackCommand {
   public readonly name = `light`;
@@ -59,25 +80,29 @@ export default class LightCommand extends CallbackCommand {
       this.bot.sendMessage(chatId, `What should I do with Light?`, INLINE_KEYBOARD);
       return;
     }
-    const action = OPTIONS[command];
-    if (!action) {
+    const option = OPTIONS[command];
+    if (!option) {
       const message = `Unsupported command: ${command}`;
       console.error(message);
       this.bot.sendMessage(chatId, message, COMMAND_KEYBOARD);
       return;
     }
 
-    const lamp = tryToConnectLamp();
-    action.execute(lamp)
+    execute(option)
       .then(() => this.bot.sendMessage(chatId, `Lamp has received you message`))
       .catch((error) => this.bot.sendMessage(chatId, error));
-    lamp.catch(() => lamp).then((it) => {
-      it.exit();
-      console.log(`Connection to lamp closed`);
-    });
   }
 
-  protected handleCallback(callback: TelegramBot.CallbackQuery): void {
-    return;
+  protected handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error> {
+    const command = callback.data;
+    const action = command ? OPTIONS[command] : null;
+    if (!action) {
+      const msg = `Invalid command: ${command}`;
+      console.error(msg);
+      return this.bot.answerCallbackQuery(answer(callback.id, msg));
+    }
+    return execute(action)
+      .then(() => this.bot.answerCallbackQuery(answer(callback.id, `Lamp has received you message`)))
+      .catch((error) => this.bot.answerCallbackQuery(answer(callback.id, error)));
   }
 }

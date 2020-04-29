@@ -1,18 +1,13 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 import {CallbackQuery} from 'node-telegram-bot-api';
 import {Command} from './command';
-import {Manage} from '../../manage';
 
 export default abstract class CallbackCommand extends Command {
 
-  protected constructor(bot: TelegramBot, manage: Manage) {
-    super(bot, manage);
-    this.onInit();
-  }
+  protected abstract handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error>;
 
-  protected abstract handleCallback(callback: CallbackQuery): void;
-
-  private onInit() {
+  protected subscribe() {
+    super.subscribe();
     // register callback on init
     this.bot.on(`callback_query`, (q: CallbackQuery) => {
       const isAuthorized = this.manage.isAuthorized(q.from);
