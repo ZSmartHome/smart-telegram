@@ -1,5 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
-import {Manage} from './manage';
+import {Manage} from '../../manage';
 
 const EMPTY: string[] = [];
 const EMPTY_REGEXP: RegExpExecArray = EMPTY as RegExpExecArray;

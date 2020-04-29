@@ -1,5 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
-import {Command} from '../command';
+import {Command} from './base/command';
 import {shell, split} from '../util';
 
 /*

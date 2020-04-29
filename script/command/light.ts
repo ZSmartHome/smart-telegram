@@ -1,6 +1,6 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 import * as Yeelight from 'yeelight2';
-import {Command} from '../command';
+import {Command} from './base/command';
 import {split} from '../util';
 
 const tryToConnectLamp = () => new Promise<Yeelight.Light>((success, fail) => {

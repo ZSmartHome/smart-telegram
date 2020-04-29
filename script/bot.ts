@@ -1,5 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
-import {Command} from './command';
+import {Command} from './command/base/command';
 import Echo from './command/echo';
 import Light from './command/light';
 import Me from './command/me';
@@ -9,7 +9,6 @@ import Start from './command/start';
 import Camera from './command/camera';
 import {URL} from 'url';
 import {init as manageInit, Manage} from './manage';
-import InlineKeyboard from './command/inlinekeyboard';
 
 interface CommandConstructor {
   new(bot: TelegramBot, manage: Manage, ...params: any[]): Command;
