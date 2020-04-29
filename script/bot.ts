@@ -15,24 +15,13 @@ interface CommandConstructor {
   new(bot: TelegramBot, manage: Manage, ...params: any[]): Command;
 }
 
-const EMPTY: string[] = [];
-const EMPTY_REGEXP: RegExpExecArray = EMPTY as RegExpExecArray;
-
 export const init = (token: string, authorized: number[], config: any) => {
   const rootId = authorized[0];
   // Create a bot that uses 'polling' to fetch new updates
   const bot = new TelegramBot(token, config);
   const manage = manageInit(authorized);
 
-  const addHandler = (command: Command): Command => {
-    const regExp = new RegExp(command.pattern, `i`);
-    const handle = command.handle.bind(command);
-    const commandHandle = command.authRequired ? manage.auth(handle) : handle;
-    bot.onText(regExp, (msg, match) => commandHandle(msg, match || EMPTY_REGEXP));
-    return command;
-  };
-
-  const setup = (ctor: CommandConstructor, ...params: any[]): Command => addHandler(new ctor(bot, manage, ...params));
+  const setup = (ctor: CommandConstructor, ...params: any[]): Command => new ctor(bot, manage, ...params);
 
   const commands = [
     setup(Echo),
