@@ -63,7 +63,7 @@ export default class LightCommand extends CallbackCommand {
     if (!action) {
       const message = `Unsupported command: ${command}`;
       console.error(message);
-      this.bot.sendMessage(chatId, message);
+      this.bot.sendMessage(chatId, message, COMMAND_KEYBOARD);
       return;
     }
 
