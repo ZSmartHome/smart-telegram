@@ -4,7 +4,7 @@ import {Command} from './command';
 
 export default abstract class CallbackCommand extends Command {
 
-  protected abstract handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error>;
+  protected abstract async handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error>;
 
   protected subscribe() {
     super.subscribe();

@@ -57,7 +57,7 @@ const INLINE_KEYBOARD: TelegramBot.SendMessageOptions = {
   reply_markup: {
     inline_keyboard: split(Object.entries(OPTIONS).map(([command, option]) => ({
       text: option.name,
-      callback_data: command.toLowerCase(),
+      callback_data: `light:${command.toLowerCase()}`,
     })), 2, 3, 3),
   },
 };
@@ -93,8 +93,11 @@ export default class LightCommand extends CallbackCommand {
       .catch((error) => this.bot.sendMessage(chatId, error));
   }
 
-  protected handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error> {
-    const command = callback.data;
+  protected async handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error> {
+    const [name, command] = (callback.data || ``).split(`:`);
+    if (name !== this.name) {
+      return false;
+    }
     const action = command ? OPTIONS[command] : null;
     if (!action) {
       const msg = `Invalid command: ${command}`;
