@@ -27,7 +27,6 @@ export const init = (token: string, authorized: number[], config: any) => {
     setup(TV),
     setup(Light),
     setup(Me),
-    setup(InlineKeyboard),
     // setup(Debug), Disable debug
   ];
 

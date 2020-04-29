@@ -21,12 +21,12 @@ export const shell = (command: string): Promise<string> => {
   });
 };
 
-export const split = (buttons: any[], ...rows: number[]): any[][] => {
+export const split = <T>(buttons: T[], ...rows: number[]): T[][] => {
   if (rows.length <= 0 || rows.length > 10) {
     throw new Error(`Invalid rows argument. Should be interval of 0..10`);
   }
 
-  const result: any[][] = [[]];
+  const result: T[][] = [[]];
 
   let currentRow = 0; // will be increased to 0 on first element
   let rowCount = rows[currentRow];
