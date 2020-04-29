@@ -15,7 +15,7 @@ export default class CameraCommand extends Command {
     super(bot, manage);
   }
 
-  public handle(msg: TelegramBot.Message): void {
+  public handleMessage(msg: TelegramBot.Message): void {
     // 'msg' is the received Message from Telegram
 
     const chatId = msg.chat.id;

@@ -7,7 +7,7 @@ export default class StartCommand extends Command {
   public pattern = `\/start`;
   public authRequired = false;
 
-  public handle(msg: TelegramBot.Message): void {
+  public handleMessage(msg: TelegramBot.Message): void {
     const me = msg.from;
     const isAuthorized = this.manage.isAuthorized(me);
     let message;

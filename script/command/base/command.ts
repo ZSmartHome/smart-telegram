@@ -17,11 +17,17 @@ export abstract class Command {
     process.nextTick(() => this.subscribe());
   }
 
-  public abstract handle(msg: TelegramBot.Message, match: RegExpExecArray): void;
+  public abstract handleMessage(msg: TelegramBot.Message, match: RegExpExecArray): void;
+
+  protected async message(id: number,
+                          msg: string,
+                          options?: TelegramBot.SendMessageOptions): Promise<TelegramBot.Message | Error> {
+    return this.bot.sendMessage(id, msg, options);
+  }
 
   protected subscribe() {
     const regExp = new RegExp(this.pattern, `i`);
-    const handle = this.handle.bind(this);
+    const handle = this.handleMessage.bind(this);
     const commandHandle = this.authRequired ? this.manage.auth(handle) : handle;
     this.bot.onText(regExp, (msg, match) => commandHandle(msg, match || EMPTY_REGEXP));
   }

@@ -21,7 +21,7 @@ const TvCommand: { [command: string]: string } = {
 
 const keys = Object.keys(TvCommand).map((it) => it.toLowerCase());
 const variants = keys.join(`|`);
-const KEYBOARD = {
+const COMMAND_KEYBOARD = {
   reply_markup: {
     keyboard: split(keys.map((it) => ({text: `/tv ${it}`})), 2, 3),
     one_time_keyboard: true,
@@ -34,18 +34,18 @@ export default class TVCommand extends Command {
   public readonly description = `Controls TV-set`;
   public readonly pattern = `\/${this.name}.?(${variants})?`;
 
-  public handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
+  public handleMessage(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;
     const command = match[1];
     if (!command) {
-      this.bot.sendMessage(chatId, `What should I do with TV?`, KEYBOARD);
+      this.message(chatId, `What should I do with TV?`, COMMAND_KEYBOARD);
       return;
     }
     const action = TvCommand[command];
     if (!action) {
       const message = `Unsupported command: ${command}`;
       console.error(message);
-      this.bot.sendMessage(chatId, message);
+      this.message(chatId, message);
       return;
     }
 

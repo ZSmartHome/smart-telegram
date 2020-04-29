@@ -7,7 +7,7 @@ export default class MeCommand extends Command {
   public pattern = `\/me`;
   public authRequired = false;
 
-  public handle(msg: TelegramBot.Message): void {
+  public handleMessage(msg: TelegramBot.Message): void {
     const me = msg.from;
     let message;
     if (!me) {

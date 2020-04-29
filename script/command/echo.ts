@@ -7,7 +7,7 @@ export default class EchoCommand extends Command {
   public pattern = `\/${this.name} (.+)`;
 
   // Matches "/echo [whatever]"
-  public handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
+  public handleMessage(msg: TelegramBot.Message, match: RegExpExecArray): void {
     // 'msg' is the received Message from Telegram
     // 'match' is the result of executing the regexp above on the text content
     // of the message

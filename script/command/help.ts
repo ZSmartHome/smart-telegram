@@ -14,7 +14,7 @@ export default class HelpCommand extends Command {
     super(bot, manage);
   }
 
-  public handle(msg: TelegramBot.Message): void {
+  public handleMessage(msg: TelegramBot.Message): void {
     this.bot.sendMessage(msg.chat.id, `List of available commands:\n${this.commands
       .map((it) => `/${it.name} — ${it.description}`)
       .join(`\n`)}`, {parse_mode: `Markdown`});

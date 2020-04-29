@@ -9,7 +9,7 @@ export default class DebugCommand extends Command {
 
   // Listen for any kind of message. There are different kinds of
   // messages.
-  public handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
+  public handleMessage(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;
 
     // send a message to the chat acknowledging receipt of their message

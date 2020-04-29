@@ -3,6 +3,7 @@ import {AnswerCallbackQueryOptions} from 'node-telegram-bot-api';
 import * as Yeelight from 'yeelight2';
 import {split} from '../util';
 import CallbackCommand from './base/callbackcommand';
+import Option from './base/option';
 
 const tryToConnectLamp = () => new Promise<Yeelight.Light>((success, fail) => {
   const timer = setTimeout(() => fail(`Couldn't find lamp in 2000ms`), 2000);
@@ -15,12 +16,7 @@ const tryToConnectLamp = () => new Promise<Yeelight.Light>((success, fail) => {
 
 type ExecuteAction = (light: Yeelight.Light) => Promise<Yeelight.Light>;
 
-interface Option {
-  name: string;
-  execute: ExecuteAction;
-}
-
-const OPTIONS: { [command: string]: Option } = {
+const OPTIONS: { [command: string]: Option<ExecuteAction> } = {
   on: {name: `On 💡`, execute: (it) => it.set_power('on')},
   off: {name: `Off 💡`, execute: (it) => it.set_power('off')},
   bright: {name: `Bright ☀️`, execute: (it) => it.set_bright(75)},
@@ -30,7 +26,7 @@ const OPTIONS: { [command: string]: Option } = {
   blue: {name: `🔵`, execute: (it) => it.set_rgb(0x0000FF)},
   green: {name: `🟢`, execute: (it) => it.set_rgb(0x00FF00)},
 };
-const execute = async (option: Option): Promise<any> => {
+const execute = async (option: Option<ExecuteAction>): Promise<any> => {
   let lamp: Yeelight.Light | undefined;
   try {
     lamp = await tryToConnectLamp();
@@ -73,7 +69,7 @@ export default class LightCommand extends CallbackCommand {
   public readonly description = `Controls light-set`;
   public readonly pattern = `\/${this.name}.?(${variants})?`;
 
-  public handle(msg: TelegramBot.Message, match: RegExpExecArray): void {
+  public handleMessage(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;
     const command = match[1];
     if (!command) {
