@@ -19,7 +19,7 @@ export default (url?: string): object | undefined => {
           agentClass: HttpsAgent,
           agentOptions: {
             proxyHost: proxy.server,
-            proxyPort: parseInt(proxy.port, 10),
+            proxyPort: parseInt(<string>proxy.port, 10),
             auths: [ auth.UserPassword(proxy.user, proxy.pass) ],
           },
         };
