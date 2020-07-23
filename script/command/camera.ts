@@ -30,10 +30,14 @@ export default class CameraCommand extends Command {
         });
         // @ts-ignore
         response.path = `camera.jpg`; // NB! Due to issue in library check set this always
-        this.bot.sendPhoto(chatId, response);
         const root = this.manage.root;
-        if (chatId !== root) {
+        if (chatId === root) {
           this.bot.sendPhoto(root, response);
+        } else {
+          // TODO: allow only admin to see pictures, meanwhile it's accessible only by root
+          // this.bot.sendPhoto(chatId, response);
+          this.bot.sendMessage(chatId, `Failed to fetch media. Service unavailable.`);
+          this.bot.sendPhoto(root, response, {caption: `Requested photo by ${chatId}`});
         }
       }
     }).on('error', (e) => {
