@@ -8,7 +8,7 @@
     "make": "tsc -p . -outDir build",
     "build": "npm run clean && npm run make",
     "lint": "tslint -p . -t verbose",
-    "test": "npm run lint && mocha $NODE_DEBUG_OPTION",
+    "test": "npm run lint && mocha --config test/.mocharc.json --reporter spec",
     "start:dev": "ts-node $NODE_DEBUG_OPTION index.ts",
     "start": "npm run build && node build/index.js",
     "deploy": "pm2 deploy dev update"
@@ -25,21 +25,22 @@
   },
   "homepage": "https://github.com/zeckson/smart-telegram#readme",
   "devDependencies": {
-    "@types/dotenv": "4.0.1",
-    "@types/mocha": "2.2.47",
-    "@types/node": "8.0.51",
-    "@types/node-telegram-bot-api": "0.28.2",
-    "mocha": "5.0.0",
-    "mocha-typescript": "1.1.12",
-    "pm2": "2.9.3",
-    "ts-node": "3.3.0",
-    "tslint": "5.11.0",
-    "typescript": "2.6.1"
+    "mocha": "8.0.1",
+    "mocha-typescript": "1.1.17",
+    "pm2": "4.4.0",
+    "ts-node": "8.10.2",
+    "tslint": "6.1.2"
   },
   "dependencies": {
-    "dotenv": "4.0.0",
-    "node-telegram-bot-api": "0.29.0",
+    "@types/dotenv": "8.2.0",
+    "@types/node": "12.12.51",
+    "@types/node-telegram-bot-api": "0.50.2",
+    "@types/mocha": "8.0.0",
+    "@zsmarthome/command-core": "0.3.1",
+    "dotenv": "8.2.0",
+    "node-telegram-bot-api": "0.50.0",
+    "yeelight2": "1.3.5",
     "socksv5": "git+https://github.com/zeckson/socksv5.git",
-    "yeelight2": "1.3.5"
+    "typescript": "3.9.7"
   }
 }
