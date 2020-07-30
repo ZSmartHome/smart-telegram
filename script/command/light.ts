@@ -1,29 +1,31 @@
 import * as TelegramBot from 'node-telegram-bot-api';
-import {each, split} from '../util';
+import {split} from '../util';
 import CallbackCommand from './base/callbackcommand';
 import {light, lightCommands} from '@zsmarthome/command-core';
 
-const keys = each(lightCommands).map(([it, _]) => it.toLowerCase());
+const BUTTONS_LAYOUT = [2, 3, 4];
+
+const commands = Object.values(lightCommands);
 const COMMAND_KEYBOARD: TelegramBot.SendMessageOptions = {
   reply_markup: {
-    keyboard: split(keys.map((it) => ({text: `/light ${it}`})), 2, 3, 3, 1),
+    keyboard: split(commands.map((it) => ({text: `/light ${it.command}`})), ...BUTTONS_LAYOUT),
     one_time_keyboard: true,
     resize_keyboard: true,
   },
 };
 const INLINE_KEYBOARD: TelegramBot.SendMessageOptions = {
   reply_markup: {
-    inline_keyboard: split(each(lightCommands).map(([command, option]) => ({
-      text: option.label,
-      callback_data: `light:${command.toLowerCase()}`,
-    })), 2, 3, 3, 1),
+    inline_keyboard: split(commands.map((it) => ({
+      text: it.label,
+      callback_data: `light:${it.command}`,
+    })), ...BUTTONS_LAYOUT),
   },
 };
 
 export default class LightCommand extends CallbackCommand {
   public readonly name = `light`;
   public readonly description = `Controls light-set`;
-  public readonly pattern = `\/${this.name}.?(${(keys.join(`|`))})?`;
+  public readonly pattern = `\/${this.name}.?(${(commands.map((it) => it.command).join(`|`))})?`;
 
   public handleMessage(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;
