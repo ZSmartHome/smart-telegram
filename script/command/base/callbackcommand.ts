@@ -7,7 +7,7 @@ export default abstract class CallbackCommand extends Command {
   protected abstract async handleCallback(callback: TelegramBot.CallbackQuery): Promise<boolean | Error>;
 
   protected async answer(id: string, text: string, alert = false): Promise<boolean | Error> {
-    return this.bot.answerCallbackQuery({
+    return this.bot.answerCallbackQuery(id,{
       callback_query_id: id,
       text,
       show_alert: alert,
