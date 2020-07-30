@@ -5,6 +5,11 @@
     "target": "es2017",
     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
     "module": "commonjs",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/@zsmarthome/command-core/@types",
+      "./types"
+    ],
     // "lib": [],                             /* Specify library files to be included in the compilation:  */
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
@@ -58,7 +63,6 @@
   },
   "include": [
     "./index.ts",
-    "./script",
-    "./types"
+    "./script"
   ]
 }
