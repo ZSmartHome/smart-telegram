@@ -10,9 +10,7 @@ import Camera from './command/camera';
 import {URL} from 'url';
 import {init as manageInit, Manage} from './manage';
 
-interface CommandConstructor {
-  new(bot: TelegramBot, manage: Manage, ...params: any[]): Command;
-}
+type CommandConstructor = new(bot: TelegramBot, manage: Manage, ...params: any[]) => Command;
 
 export const init = (token: string, authorized: number[], config: any) => {
   const rootId = authorized[0];
