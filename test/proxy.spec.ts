@@ -4,12 +4,14 @@ import {parse} from 'url';
 import proxy from '../script/proxy';
 
 @suite('Configure proxy')
-class SplitUtil {
+export default class SplitUtil {
+  // @ts-ignore
   @test public 'http proxy should configure noremal'() {
     const url = `http://localhost:1345`;
     assert.deepEqual(proxy(url), {proxy: url});
   }
 
+  // @ts-ignore
   @test public 'https proxy should configure noremal'() {
     const url = `https://localhost:1345`;
     assert.deepEqual(proxy(url), {proxy: url});
@@ -27,19 +29,23 @@ class SplitUtil {
     });
   }
 */
+  // @ts-ignore
   @test public 'invalid proxy passed'() {
     const url = `jkshdjkasd;klasj;d`;
     assert.ok(proxy(url) === undefined);
   }
 
+  // @ts-ignore
   @test public 'empty proxy passed'() {
     assert.ok(proxy(``) === undefined);
   }
 
+  // @ts-ignore
   @test public 'no proxy passed'() {
     assert.ok(proxy() === undefined);
   }
 
+  // @ts-ignore
   @test public 'tg protocol correct parse'() {
     const parsed = parse(`tg://socks?server=12%2E12%2E0%2E12&port=1212&user=rkn&pass=rkn`, true);
     assert.equal(parsed.protocol, `tg:`);
