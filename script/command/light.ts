@@ -1,7 +1,6 @@
 import * as TelegramBot from 'node-telegram-bot-api';
-import {split} from '../util';
 import CallbackCommand from './base/callbackcommand';
-import {light, lightCommands} from '@zsmarthome/command-core';
+import {light, lightCommands, split} from '@zsmarthome/command-core';
 
 const BUTTONS_LAYOUT = [2, 3, 4];
 
