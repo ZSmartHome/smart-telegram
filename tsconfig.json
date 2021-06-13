@@ -58,7 +58,9 @@
 
     /* Experimental Options */
     /* Enables experimental support for ES7 decorators. */
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    /* Skip type checking for conflicts TS2300. */
+    "skipLibCheck": true
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "include": [
