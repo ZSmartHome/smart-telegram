@@ -4,10 +4,10 @@ import {light, lightCommands, split} from '@zsmarthome/command-core';
 
 const BUTTONS_LAYOUT = [2, 3, 4];
 
-const commands = Object.values(lightCommands);
+const commands = lightCommands;
 const COMMAND_KEYBOARD: TelegramBot.SendMessageOptions = {
   reply_markup: {
-    keyboard: split(commands.map((it) => ({text: `/light ${it.command}`})), ...BUTTONS_LAYOUT),
+    keyboard: split(commands.map((it) => ({text: `/light ${it.key}`})), ...BUTTONS_LAYOUT),
     one_time_keyboard: true,
     resize_keyboard: true,
   },
@@ -16,7 +16,7 @@ const INLINE_KEYBOARD: TelegramBot.SendMessageOptions = {
   reply_markup: {
     inline_keyboard: split(commands.map((it) => ({
       text: it.label,
-      callback_data: `light:${it.command}`,
+      callback_data: `light:${it.key}`,
     })), ...BUTTONS_LAYOUT),
   },
 };
@@ -24,7 +24,7 @@ const INLINE_KEYBOARD: TelegramBot.SendMessageOptions = {
 export default class LightCommand extends CallbackCommand {
   public readonly name = `light`;
   public readonly description = `Controls light-set`;
-  public readonly pattern = `\/${this.name}.?(${(commands.map((it) => it.command).join(`|`))})?`;
+  public readonly pattern = `\/${this.name}.?(${(commands.map((it) => it.key).join(`|`))})?`;
 
   public handleMessage(msg: TelegramBot.Message, match: RegExpExecArray): void {
     const chatId = msg.chat.id;

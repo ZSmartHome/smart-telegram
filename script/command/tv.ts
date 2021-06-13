@@ -4,9 +4,9 @@ import {split, tv, tvCommands} from '@zsmarthome/command-core';
 
 const BUTTONS_LAYOUT = [2, 3];
 
-const commands = Object.values(tvCommands);
+const commands = tvCommands;
 
-const keys = commands.map((it) => it.command);
+const keys = commands.map((it) => it.key);
 const COMMAND_KEYBOARD = {
   reply_markup: {
     keyboard: split(keys.map((it) => ({text: `/tv ${it}`})), ...BUTTONS_LAYOUT),
@@ -19,7 +19,7 @@ const INLINE_KEYBOARD: TelegramBot.SendMessageOptions = {
   reply_markup: {
     inline_keyboard: split(commands.map((it) => ({
       text: it.label,
-      callback_data: `tv:${it.command}`,
+      callback_data: `tv:${it.key}`,
     })), ...BUTTONS_LAYOUT),
   },
   disable_notification: true,
